@@ -1,0 +1,35 @@
+# Ignore Mac system files
+.DS_store
+
+# Ignore all text files
+# *.txt
+
+# Ignore files related to API keys
+.env
+
+# Ignore SASS config files
+.sass-cache
+
+# Virtual Environment
+venv/
+313venv/
+37venv/
+312venv/
+311venv/
+
+# Ignore build artifacts
+build/
+
+# Ignore compiled files
+*.class
+*.jar
+
+# Ignore IDE files
+.idea/
+.vscode/
+
+# Ignore temporary files
+*.tmp
+
+# Ignore log files
+*.log
