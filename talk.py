@@ -9,8 +9,35 @@ import speech_recognition as sr
 from gtts import gTTS
 import os
 
-class SpeechToTextApp(App):
+class SpeechApp(App): # Home page
     def build(self):
+        self.title = 'Speech Recognition and Text-to-Speech'
+
+        layout = BoxLayout(orientation='horizontal', padding=10)    
+
+        speech_to_text_button = Button(text='Speech to Text', size_hint=(1, 0.5))
+        speech_to_text_button.bind(on_press=self.open_speech_to_text)
+        layout.add_widget(speech_to_text_button)
+
+        text_to_speech_button = Button(text='Text to Speech', size_hint=(1, 0.5))
+        text_to_speech_button.bind(on_press=self.open_text_to_speech)
+        layout.add_widget(text_to_speech_button)
+
+        return layout
+
+    def open_speech_to_text(self, instance):
+        self.stop()
+        SpeechToTextApp().run()
+
+    def open_text_to_speech(self, instance):
+        self.stop()
+        TextToSpeechApp().run()
+
+class SpeechToTextApp(App): #STT
+    def build(self):
+        
+        self.return_button = Button(text="Home", size=(.5, .5))
+        
         self.title = 'Speech to Text'
 
         layout = BoxLayout(orientation='vertical', padding=10)
@@ -54,31 +81,7 @@ class SpeechToTextApp(App):
         self.start_button.disabled = False
         self.stop_button.disabled = True
 
-class SpeechApp(App):
-    def build(self):
-        self.title = 'Speech Recognition and Text-to-Speech'
-
-        layout = BoxLayout(orientation='vertical', padding=10)
-
-        speech_to_text_button = Button(text='Speech to Text', size_hint=(1, 0.5))
-        speech_to_text_button.bind(on_press=self.open_speech_to_text)
-        layout.add_widget(speech_to_text_button)
-
-        text_to_speech_button = Button(text='Text to Speech', size_hint=(1, 0.5))
-        text_to_speech_button.bind(on_press=self.open_text_to_speech)
-        layout.add_widget(text_to_speech_button)
-
-        return layout
-
-    def open_speech_to_text(self, instance):
-        self.stop()
-        SpeechToTextApp().run()
-
-    def open_text_to_speech(self, instance):
-        self.stop()
-        TextToSpeechApp().run()
-
-class TextToSpeechApp(App):
+class TextToSpeechApp(App): #TTS
     def build(self):
         self.title = 'Text to Speech'
 
