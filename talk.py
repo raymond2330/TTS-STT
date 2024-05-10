@@ -23,22 +23,22 @@ class SpeechApp(App): # Home page
         
   
        # Image 
-        self.window.add_widget(Label())  # Add a blank space
+        self.window.add_widget(Label())  # BLANK 
         self.window.add_widget(Image(source="images/CastSpeakLogo.png"))
-        self.window.add_widget(Label())  # Add a blank space
+        self.window.add_widget(Label())  # BLANK 
 
         # Greeting Text
-        self.window.add_widget(Label())  # Add a blank space
+        self.window.add_widget(Label())  # BLANK 
         self.homeGreeting = Label(
                                 text="Welcome to SpeakCast", 
                                 color='#000000',
                                 font_size='50',
                                 bold= True)
         self.window.add_widget(self.homeGreeting)
-        self.window.add_widget(Label())  # Add a blank space
+        self.window.add_widget(Label())  # BLANK
 
         # Supporting Text
-        self.window.add_widget(Label())  # Add a blank space
+        self.window.add_widget(Label())  # BLANK
         self.homeDescription = Label(
                                 text="Use speech-to-text and text-to-speech \n technologies to communicate confidently", 
                                 color='#B6B0B0',
@@ -47,7 +47,7 @@ class SpeechApp(App): # Home page
                                 font_size='28',
                                 bold= False)
         self.window.add_widget(self.homeDescription)
-        self.window.add_widget(Label())  # Add a blank space
+        self.window.add_widget(Label())  # BLANK
 
         # STS BUTTON 
         speech_to_text_button = Button(
@@ -55,14 +55,14 @@ class SpeechApp(App): # Home page
                                 color="#FFFFFF",
                                 halign = 'center',
                                 valign = 'middle',
-                                background_color = '#2274F0',
+                                background_color = '#68A3FB',
                                 font_size = "30",
                                 bold = True
                                        )
         speech_to_text_button.bind(on_press=self.open_speech_to_text)
         self.window.add_widget(speech_to_text_button)
 
-        self.window.add_widget(Label())  # Add a blank space
+        self.window.add_widget(Label()) 
 
         # TTS BUTTON
         text_to_speech_button = Button(
@@ -70,7 +70,7 @@ class SpeechApp(App): # Home page
                                 color="#FFFFFF",
                                 halign = 'center',
                                 valign = 'middle',
-                                background_color = '#2274F0',
+                                background_color = '#68A3FB',
                                 font_size = "30",
                                 bold = True
                                        )
@@ -126,7 +126,10 @@ class SpeechToTextApp(App): #STT
 
         layout = BoxLayout(orientation='vertical', padding=10)
 
-        self.output_label = Label(text='Output will appear here', size_hint=(1, 0.5))
+        self.output_label = Label(
+                                text='Output will appear here',
+                                size_hint=(1, 0.5),
+                                color = "#000000")
         layout.add_widget(self.output_label)
 
         self.start_button = Button(text='Start Recording', size_hint=(1, 0.1))
