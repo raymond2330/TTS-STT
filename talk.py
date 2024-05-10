@@ -1,29 +1,113 @@
 import kivy
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.gridlayout import GridLayout
 from kivy.uix.button import Button
 from kivy.uix.label import Label
+from kivy.uix.image import Image
 from kivy.uix.textinput import TextInput
-
+from kivy.graphics import Color, Rectangle
+from kivy.utils import get_color_from_hex
+from kivy.core.window import Window
 import speech_recognition as sr
 from gtts import gTTS
 import os
 
 class SpeechApp(App): # Home page
     def build(self):
-        self.title = 'Speech Recognition and Text-to-Speech'
+        self.title = 'SpeakCast'
+        Window.clearcolor =  get_color_from_hex('#FFFFFF')
+        Window.size = (500, 750)
+        self.window = GridLayout()
+        self.window.cols = 3
+        
+  
+       # Image 
+        self.window.add_widget(Label())  # BLANK 
+        self.window.add_widget(Image(source="images/CastSpeakLogo.png"))
+        self.window.add_widget(Label())  # BLANK 
 
-        layout = BoxLayout(orientation='horizontal', padding=10)    
+        # Greeting Text
+        self.window.add_widget(Label())  # BLANK 
+        self.homeGreeting = Label(
+                                text="Welcome to SpeakCast", 
+                                color='#000000',
+                                font_size='50',
+                                bold= True)
+        self.window.add_widget(self.homeGreeting)
+        self.window.add_widget(Label())  # BLANK
 
-        speech_to_text_button = Button(text='Speech to Text', size_hint=(1, 0.5))
+        # Supporting Text
+        self.window.add_widget(Label())  # BLANK
+        self.homeDescription = Label(
+                                text="Use speech-to-text and text-to-speech \n technologies to communicate confidently", 
+                                color='#B6B0B0',
+                                halign = 'center',
+                                valign = 'middle',
+                                font_size='28',
+                                bold= False)
+        self.window.add_widget(self.homeDescription)
+        self.window.add_widget(Label())  # BLANK
+
+        # STS BUTTON 
+        speech_to_text_button = Button(
+                                text='Speech\nto\nText',
+                                color="#FFFFFF",
+                                halign = 'center',
+                                valign = 'middle',
+                                background_color = '#68A3FB',
+                                font_size = "30",
+                                bold = True
+                                       )
         speech_to_text_button.bind(on_press=self.open_speech_to_text)
-        layout.add_widget(speech_to_text_button)
+        self.window.add_widget(speech_to_text_button)
 
-        text_to_speech_button = Button(text='Text to Speech', size_hint=(1, 0.5))
+        self.window.add_widget(Label()) 
+
+        # TTS BUTTON
+        text_to_speech_button = Button(
+                                text='Text\nto\nSpeech',
+                                color="#FFFFFF",
+                                halign = 'center',
+                                valign = 'middle',
+                                background_color = '#68A3FB',
+                                font_size = "30",
+                                bold = True
+                                       )
         text_to_speech_button.bind(on_press=self.open_text_to_speech)
-        layout.add_widget(text_to_speech_button)
+        self.window.add_widget(text_to_speech_button)
+        return self.window
+        
 
-        return layout
+        # # STS BUTTON  
+        # speech_to_text_button = Button(text='Speech to Text', size_hint=(1, None), height=200)
+        # speech_to_text_button.bind(on_press=self.open_speech_to_text)
+        # layout.add_widget(speech_to_text_button)
+
+        # # TTS BUTTON
+        # text_to_speech_button = Button(text='Text to Speech', size_hint=(1, None), height=200)
+        # text_to_speech_button.bind(on_press=self.open_text_to_speech)
+        # layout.add_widget(text_to_speech_button)
+
+       
+        # return layout
+
+
+
+
+
+     # layout = BoxLayout(orientation='vertical', padding=2, size_hint=(1, None), height=932,)    
+        # layout = BoxLayout(orientation='horizontal', padding=10)    
+
+        # speech_to_text_button = Button(text='Speech to Text', size_hint=(1, 0.5))
+        # speech_to_text_button.bind(on_press=self.open_speech_to_text)
+        # layout.add_widget(speech_to_text_button)
+
+        # text_to_speech_button = Button(text='Text to Speech', size_hint=(1, 0.5))
+        # text_to_speech_button.bind(on_press=self.open_text_to_speech)
+        # layout.add_widget(text_to_speech_button)
+
+        return self.window
 
     def open_speech_to_text(self, instance):
         self.stop()
@@ -42,7 +126,10 @@ class SpeechToTextApp(App): #STT
 
         layout = BoxLayout(orientation='vertical', padding=10)
 
-        self.output_label = Label(text='Output will appear here', size_hint=(1, 0.5))
+        self.output_label = Label(
+                                text='Output will appear here',
+                                size_hint=(1, 0.5),
+                                color = "#000000")
         layout.add_widget(self.output_label)
 
         self.start_button = Button(text='Start Recording', size_hint=(1, 0.1))
