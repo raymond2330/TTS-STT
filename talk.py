@@ -13,41 +13,37 @@ import speech_recognition as sr
 from gtts import gTTS
 import os
 
+class BaseApp(App):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.current_page = None
 
+    def change_page(self, page):
+        if self.current_page:
+            self.current_page.clear_widgets()
+        self.current_page = page
+        self.root_window.remove_widget(self.root)
+        self.root_window.add_widget(self.current_page)
 
-class OnboardingPage(App): #ONBOARDING
+class OnboardingPage(GridLayout): #ONBOARDING
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        Window.clearcolor = get_color_from_hex('#2274F0')
+        self.cols = 1
 
-
-    def build(self):
-        self.title='SpeakCast'
-        Window.clearcolor =  get_color_from_hex('#2274F0')
-        Window.size = (500, 750)
-        self.window = GridLayout()
-        self.window.cols = 1
-
-        # First Onboard
-
-        self.window.add_widget(Label())
+        self.add_widget(Label())  # BLANK
         image = Image(source="images/whiteCastSpeakLogo.png")
-     
+        self.add_widget(image)
+        self.add_widget(Label())  # BLANK
 
-        self.window.add_widget(image)
-
-
-        self.window.add_widget(Label())
-
-
-        self.landingGreeting = Label(
+        landing_greeting = Label(
             text="Speak and Read with Confidence",
             color='#FFFFFF',    
             font_size='30',
-            italic = True
-            
+            italic=True
         )
+        self.add_widget(landing_greeting)
 
-        self.window.add_widget(self.landingGreeting)
-
-        # PROCEED BUTTON
         proceed_in_onboarding = Button(
             text="Proceed",
             color='#FFFFFF',
@@ -55,140 +51,124 @@ class OnboardingPage(App): #ONBOARDING
             bold=True,
             font_size='25'
         )
+        proceed_in_onboarding.bind(on_press=self.proceed_onboarding)
+        self.add_widget(proceed_in_onboarding)
 
-        proceed_in_onboarding.bind(on_press=self.proceed_onboarding)  # Bind the button to the proceed_onboarding method
-        self.window.add_widget(proceed_in_onboarding)
-        
-        
-        # self.window.add_widget(Button(
-        #     text = "Proceed",
-        #     color = '#FFFFFF',
-        #     background_color = "#2274F0",
-        #     bold = True
-        #     font_size = '25'
-        
-        # ))
-        
- 
-        
-        return self.window
-    
     def proceed_onboarding(self, instance):
-        self.stop()
-        SpeechApp().run()
+        app = App.get_running_app()
+        app.change_page(SpeechApp())
 
+class SpeechApp(GridLayout):  # Home page
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        Window.clearcolor = get_color_from_hex('#FFFFFF')
+        self.cols = 1
 
+        self.add_widget(Label())  # BLANK
+        home_greeting = Label(
+            text="Welcome to SpeakCast",
+            color='#000000',
+            font_size='50',
+            bold=True
+        )
+        self.add_widget(home_greeting)
 
-class SpeechApp(App): # Home page
-    def build(self):
-        self.title = 'SpeakCast'
-        Window.clearcolor =  get_color_from_hex('#FFFFFF')
-        Window.size = (500, 750)
-        self.window = GridLayout()
-        self.window.cols = 3
-        
-  
-       # Image 
-        self.window.add_widget(Label())  # BLANK 
-        self.window.add_widget(Image(source="images/CastSpeakLogo.png"))
-        self.window.add_widget(Label())  # BLANK 
+        home_description = Label(
+            text="Use speech-to-text and text-to-speech \n technologies to communicate confidently",
+            color='#B6B0B0',
+            halign='center',
+            valign='middle',
+            font_size='28'
+        )
+        self.add_widget(home_description)
 
-        # Greeting Text
-        self.window.add_widget(Label())  # BLANK 
-        self.homeGreeting = Label(
-                                text="Welcome to SpeakCast", 
-                                color='#000000',
-                                font_size='50',
-                                bold= True)
-        self.window.add_widget(self.homeGreeting)
-        self.window.add_widget(Label())  # BLANK
+        self.swap_button = Button(
+            text='Swap to Text to Speech',
+            color="#FFFFFF",
+            halign='center',
+            valign='middle',
+            background_color='#68A3FB',
+            font_size="20",
+            bold=True
+        )
+        self.swap_button.bind(on_press=self.swap_functionality)
+        self.add_widget(self.swap_button)
 
-        # Supporting Text
-        self.window.add_widget(Label())  # BLANK
-        self.homeDescription = Label(
-                                text="Use speech-to-text and text-to-speech \n technologies to communicate confidently", 
-                                color='#B6B0B0',
-                                halign = 'center',
-                                valign = 'middle',
-                                font_size='28',
-                                bold= False)
-        self.window.add_widget(self.homeDescription)
-        self.window.add_widget(Label())  # BLANK
-
-        # STS BUTTON 
-        speech_to_text_button = Button(
-                                text='Speech\nto\nText',
-                                color="#FFFFFF",
-                                halign = 'center',
-                                valign = 'middle',
-                                background_color = '#68A3FB',
-                                font_size = "30",
-                                bold = True
-                                       )
-        speech_to_text_button.bind(on_press=self.open_speech_to_text)
-        self.window.add_widget(speech_to_text_button)
-
-        self.window.add_widget(Label()) 
-
-        # TTS BUTTON
-        text_to_speech_button = Button(
-                                text='Text\nto\nSpeech',
-                                color="#FFFFFF",
-                                halign = 'center',
-                                valign = 'middle',
-                                background_color = '#68A3FB',
-                                font_size = "30",
-                                bold = True
-                                       )
-        text_to_speech_button.bind(on_press=self.open_text_to_speech)
-        self.window.add_widget(text_to_speech_button)
-        return self.window
+        self.main_button = Button(
+            text='Speech\nto\nText',
+            color="#FFFFFF",
+            halign='center',
+            valign='middle',
+            background_color='#68A3FB',
+            font_size="30",
+            bold=True
+        )
+        self.main_button.bind(on_press=self.open_speech_to_text)
+        self.add_widget(self.main_button)
 
     def open_speech_to_text(self, instance):
-        self.stop()
-        SpeechToTextApp().run()
+        app = App.get_running_app()
+        app.change_page(SpeechToTextApp())
 
     def open_text_to_speech(self, instance):
-        self.stop()
-        TextToSpeechApp().run()
+        app = App.get_running_app()
+        app.change_page(TextToSpeechApp())
 
-class SpeechToTextApp(App): #STT
-    def build(self):
-        
-        self.return_button = Button(text="Home", size=(.5, .5))
-        
-        self.title = 'Speech to Text'
+    def swap_functionality(self, instance):
+        main_button = self.main_button
+        swap_button = self.swap_button
 
-        layout = BoxLayout(orientation='vertical', padding=10)
+        if main_button.text == 'Speech\nto\nText':
+            main_button.text = 'Text\nto\nSpeech'
+            main_button.unbind(on_press=self.open_speech_to_text)
+            main_button.bind(on_press=self.open_text_to_speech)
+            swap_button.text = 'Swap to Speech to Text'
+        else:
+            main_button.text = 'Speech\nto\nText'
+            main_button.unbind(on_press=self.open_text_to_speech)
+            main_button.bind(on_press=self.open_speech_to_text)
+            swap_button.text = 'Swap to Text to Speech'
+
+
+class SpeechToTextApp(BoxLayout): #STT
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        Window.clearcolor = get_color_from_hex('#FFFFFF')
+        self.orientation = 'vertical'
 
         self.output_label = Label(
-                                text='Output will appear here',
-                                size_hint=(1, 0.5),
-                                color = "#000000")
-        layout.add_widget(self.output_label)
+            text='Output will appear here',
+            size_hint=(1, 0.5),
+            color="#000000"
+        )
+        self.add_widget(self.output_label)
 
         self.start_button = Button(text='Start Recording', size_hint=(1, 0.1))
         self.start_button.bind(on_press=self.start_recording)
-        layout.add_widget(self.start_button)
+        self.add_widget(self.start_button)
 
         self.stop_button = Button(text='Stop Recording', size_hint=(1, 0.1))
         self.stop_button.bind(on_press=self.stop_recording)
         self.stop_button.disabled = True
-        layout.add_widget(self.stop_button)
+        self.add_widget(self.stop_button)
 
-        return layout
+        back_button = Button(text='Back to Home', size_hint=(1, 0.1))
+        back_button.bind(on_press=self.go_back_to_home)
+        self.add_widget(back_button)
 
     def start_recording(self, instance):
-        self.recognizer = sr.Recognizer()
-        self.microphone = sr.Microphone()
+        recognizer = sr.Recognizer()
+        microphone = sr.Microphone()
 
-        with self.microphone as source:
+        with microphone as source:
             print("Listening...")
-            self.recognizer.adjust_for_ambient_noise(source)
-            self.audio = self.recognizer.listen(source)
+            recognizer.adjust_for_ambient_noise(source)
+            audio = recognizer.listen(source)
 
         self.start_button.disabled = True
         self.stop_button.disabled = False
+        self.recognizer = recognizer
+        self.audio = audio
 
     def stop_recording(self, instance):
         try:
@@ -203,20 +183,26 @@ class SpeechToTextApp(App): #STT
         self.start_button.disabled = False
         self.stop_button.disabled = True
 
-class TextToSpeechApp(App): #TTS
-    def build(self):
-        self.title = 'Text to Speech'
+    def go_back_to_home(self, instance):
+        app = App.get_running_app()
+        app.change_page(SpeechApp())
 
-        layout = BoxLayout(orientation='vertical', padding=10)
+class TextToSpeechApp(BoxLayout): #TTS
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        Window.clearcolor = get_color_from_hex('#FFFFFF')
+        self.orientation = 'vertical'
 
         self.text_input = TextInput(hint_text='Enter text here', multiline=False, size_hint=(1, 0.1))
-        layout.add_widget(self.text_input)
+        self.add_widget(self.text_input)
 
         text_to_speech_button = Button(text='Convert to Speech', size_hint=(1, 0.1))
         text_to_speech_button.bind(on_press=self.text_to_speech)
-        layout.add_widget(text_to_speech_button)
+        self.add_widget(text_to_speech_button)
 
-        return layout
+        back_button = Button(text='Back to Home', size_hint=(1, 0.1))
+        back_button.bind(on_press=self.go_back_to_home)
+        self.add_widget(back_button)
 
     def text_to_speech(self, instance):
         text = self.text_input.text
@@ -227,5 +213,13 @@ class TextToSpeechApp(App): #TTS
         else:
             self.output_label.text = "Please enter some text first."
 
+    def go_back_to_home(self, instance):
+        app = App.get_running_app()
+        app.change_page(SpeechApp())
+
+class SpeakCastApp(BaseApp):
+    def build(self):
+        return OnboardingPage()
+
 if __name__ == "__main__":
-    OnboardingPage().run()
+    SpeakCastApp().run()
