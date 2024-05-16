@@ -13,6 +13,7 @@ from kivy.core.window import Window
 import speech_recognition as sr
 from kivy.uix.popup import Popup
 from kivy.clock import Clock
+from kivy.core.clipboard import Clipboard
 
 class OnboardingPage(App): # ONBOARDING
     def build(self):
@@ -175,6 +176,19 @@ class SpeechToTextApp(App): # STT
         self.stop_button.disabled = True
         layout.add_widget(self.stop_button)
 
+        self.copy_button = Button(
+            text='Copy\nText',
+            color="#FFFFFF",
+            halign='center',
+            valign='middle',
+            background_color='#68A3FB',
+            font_size="20",
+            size_hint=(1, 0.1),
+            bold=True
+        )
+        self.copy_button.bind(on_press=self.copy_text)
+        layout.add_widget(self.copy_button)
+
         # Back Button
         back_button = Button(
             text='Back\nto\nHome',
@@ -190,6 +204,9 @@ class SpeechToTextApp(App): # STT
         layout.add_widget(back_button)
 
         return layout
+
+    def copy_text(self, instance):
+        Clipboard.copy(self.output_label.text)
 
     def start_recording(self, instance):
         self.recognizer = sr.Recognizer()
