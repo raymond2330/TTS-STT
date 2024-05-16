@@ -33,3 +33,6 @@ build/
 
 # Ignore log files
 *.log
+
+
+output.mp3
