@@ -13,6 +13,72 @@ import speech_recognition as sr
 from gtts import gTTS
 import os
 
+
+
+class OnboardingPage(App): #ONBOARDING
+
+
+    def build(self):
+        self.title='SpeakCast'
+        Window.clearcolor =  get_color_from_hex('#2274F0')
+        Window.size = (500, 750)
+        self.window = GridLayout()
+        self.window.cols = 1
+
+        # First Onboard
+
+        self.window.add_widget(Label())
+        image = Image(source="images/whiteCastSpeakLogo.png")
+     
+
+        self.window.add_widget(image)
+
+
+        self.window.add_widget(Label())
+
+
+        self.landingGreeting = Label(
+            text="Speak and Read with Confidence",
+            color='#FFFFFF',    
+            font_size='30',
+            italic = True
+            
+        )
+
+        self.window.add_widget(self.landingGreeting)
+
+        # PROCEED BUTTON
+        proceed_in_onboarding = Button(
+            text="Proceed",
+            color='#FFFFFF',
+            background_color="#2274F0",
+            bold=True,
+            font_size='25'
+        )
+
+        proceed_in_onboarding.bind(on_press=self.proceed_onboarding)  # Bind the button to the proceed_onboarding method
+        self.window.add_widget(proceed_in_onboarding)
+        
+        
+        # self.window.add_widget(Button(
+        #     text = "Proceed",
+        #     color = '#FFFFFF',
+        #     background_color = "#2274F0",
+        #     bold = True
+        #     font_size = '25'
+        
+        # ))
+        
+ 
+        
+        return self.window
+    
+    def proceed_onboarding(self, instance):
+        self.stop()
+        SpeechApp().run()
+
+
+
 class SpeechApp(App): # Home page
     def build(self):
         self.title = 'SpeakCast'
@@ -76,37 +142,6 @@ class SpeechApp(App): # Home page
                                        )
         text_to_speech_button.bind(on_press=self.open_text_to_speech)
         self.window.add_widget(text_to_speech_button)
-        return self.window
-        
-
-        # # STS BUTTON  
-        # speech_to_text_button = Button(text='Speech to Text', size_hint=(1, None), height=200)
-        # speech_to_text_button.bind(on_press=self.open_speech_to_text)
-        # layout.add_widget(speech_to_text_button)
-
-        # # TTS BUTTON
-        # text_to_speech_button = Button(text='Text to Speech', size_hint=(1, None), height=200)
-        # text_to_speech_button.bind(on_press=self.open_text_to_speech)
-        # layout.add_widget(text_to_speech_button)
-
-       
-        # return layout
-
-
-
-
-
-     # layout = BoxLayout(orientation='vertical', padding=2, size_hint=(1, None), height=932,)    
-        # layout = BoxLayout(orientation='horizontal', padding=10)    
-
-        # speech_to_text_button = Button(text='Speech to Text', size_hint=(1, 0.5))
-        # speech_to_text_button.bind(on_press=self.open_speech_to_text)
-        # layout.add_widget(speech_to_text_button)
-
-        # text_to_speech_button = Button(text='Text to Speech', size_hint=(1, 0.5))
-        # text_to_speech_button.bind(on_press=self.open_text_to_speech)
-        # layout.add_widget(text_to_speech_button)
-
         return self.window
 
     def open_speech_to_text(self, instance):
@@ -193,4 +228,4 @@ class TextToSpeechApp(App): #TTS
             self.output_label.text = "Please enter some text first."
 
 if __name__ == "__main__":
-    SpeechApp().run()
+    OnboardingPage().run()
