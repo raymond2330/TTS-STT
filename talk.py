@@ -15,7 +15,72 @@ from kivy.uix.popup import Popup
 from kivy.clock import Clock
 from kivy.core.clipboard import Clipboard
 
-class OnboardingPage(App): # ONBOARDING
+class OnboardingPage(App): #ONBOARDING
+
+
+    def build(self):
+        self.title='SpeakCast'
+        Window.clearcolor =  get_color_from_hex('#2274F0')
+        Window.size = (500, 750)
+        self.window = GridLayout()
+        self.window.cols = 1
+
+        # First Onboard
+
+        self.window.add_widget(Label())
+        image = Image(source="images/whiteCastSpeakLogo.png")
+     
+
+        self.window.add_widget(image)
+
+
+        self.window.add_widget(Label())
+
+
+        self.landingGreeting = Label(
+            text="Speak and Read with Confidence",
+            color='#FFFFFF',    
+            font_size='30',
+            italic = True
+            
+        )
+
+        self.window.add_widget(self.landingGreeting)
+
+        # PROCEED BUTTON
+        proceed_in_onboarding = Button(
+            text="Proceed",
+            color='#FFFFFF',
+            background_color="#2274F0",
+            bold=True,
+            font_size='25'
+        )
+
+        proceed_in_onboarding.bind(on_press=self.proceed_onboarding)  # Bind the button to the proceed_onboarding method
+        self.window.add_widget(proceed_in_onboarding)
+        
+        
+        # self.window.add_widget(Button(
+        #     text = "Proceed",
+        #     color = '#FFFFFF',
+        #     background_color = "#2274F0",
+        #     bold = True
+        #     font_size = '25'
+        
+        # ))
+        
+ 
+        
+        return self.window
+    
+    def proceed_onboarding(self, instance):
+        self.stop()
+        SpeechApp().run()
+
+
+
+class SpeechApp(App): # Home page
+        main
     def build(self):
         self.title = 'SpeakCast'
         Window.clearcolor = get_color_from_hex('#2274F0')
@@ -117,6 +182,37 @@ class SpeechApp(App): # Home page
 
         return self.window
     
+
+#         # STS BUTTON 
+#         speech_to_text_button = Button(
+#                                 text='Speech\nto\nText',
+#                                 color="#FFFFFF",
+#                                 halign = 'center',
+#                                 valign = 'middle',
+#                                 background_color = '#68A3FB',
+#                                 font_size = "30",
+#                                 bold = True
+#                                        )
+#         speech_to_text_button.bind(on_press=self.open_speech_to_text)
+#         self.window.add_widget(speech_to_text_button)
+
+#         self.window.add_widget(Label()) 
+
+#         # TTS BUTTON
+#         text_to_speech_button = Button(
+#                                 text='Text\nto\nSpeech',
+#                                 color="#FFFFFF",
+#                                 halign = 'center',
+#                                 valign = 'middle',
+#                                 background_color = '#68A3FB',
+#                                 font_size = "30",
+#                                 bold = True
+#                                        )
+#         text_to_speech_button.bind(on_press=self.open_text_to_speech)
+#         self.window.add_widget(text_to_speech_button)
+#         return self.window
+
+        main
     def open_speech_to_text(self, instance):
         self.stop()
         SpeechToTextApp().run()
@@ -312,4 +408,6 @@ class TextToSpeechApp(App): # TTS
         super().on_stop()
 
 if __name__ == "__main__":
+
     OnboardingPage().run()
+        main
