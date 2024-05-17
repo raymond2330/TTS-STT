@@ -14,13 +14,13 @@ import speech_recognition as sr
 from kivy.uix.popup import Popup
 from kivy.clock import Clock
 from kivy.core.clipboard import Clipboard
+from plyer import vibrator
 
-class OnboardingPage(App): #ONBOARDING
-
+class OnboardingPage(App):  # ONBOARDING
 
     def build(self):
-        self.title='SpeakCast'
-        Window.clearcolor =  get_color_from_hex('#2274F0')
+        self.title = 'SpeakCast'
+        Window.clearcolor = get_color_from_hex('#2274F0')
         Window.size = (500, 750)
         self.window = GridLayout()
         self.window.cols = 1
@@ -29,74 +29,12 @@ class OnboardingPage(App): #ONBOARDING
 
         self.window.add_widget(Label())
         image = Image(source="images/whiteCastSpeakLogo.png")
-     
-
         self.window.add_widget(image)
-
-
         self.window.add_widget(Label())
-
 
         self.landingGreeting = Label(
             text="Speak and Read with Confidence",
-            color='#FFFFFF',    
-            font_size='30',
-            italic = True
-            
-        )
-
-        self.window.add_widget(self.landingGreeting)
-
-        # PROCEED BUTTON
-        proceed_in_onboarding = Button(
-            text="Proceed",
             color='#FFFFFF',
-            background_color="#2274F0",
-            bold=True,
-            font_size='25'
-        )
-
-        proceed_in_onboarding.bind(on_press=self.proceed_onboarding)  # Bind the button to the proceed_onboarding method
-        self.window.add_widget(proceed_in_onboarding)
-        
-        
-        # self.window.add_widget(Button(
-        #     text = "Proceed",
-        #     color = '#FFFFFF',
-        #     background_color = "#2274F0",
-        #     bold = True
-        #     font_size = '25'
-        
-        # ))
-        
- 
-        
-        return self.window
-    
-    def proceed_onboarding(self, instance):
-        self.stop()
-        SpeechApp().run()
-
-
-
-class SpeechApp(App): # Home page
-        # main
-    def build(self):
-        self.title = 'SpeakCast'
-        Window.clearcolor = get_color_from_hex('#2274F0')
-        Window.size = (300, 550)
-        self.window = GridLayout()
-        self.window.cols = 1
-
-        # First Onboard
-        self.window.add_widget(Label())
-        image = Image(source="images/whiteCastSpeakLogo.png")
-        self.window.add_widget(image)
-        self.window.add_widget(Label())
-
-        self.landingGreeting = Label(
-            text="Speak and Read with Confidence",
-            color='#FFFFFF',    
             font_size='30',
             italic=True
         )
@@ -110,16 +48,24 @@ class SpeechApp(App): # Home page
             bold=True,
             font_size='25'
         )
-        proceed_in_onboarding.bind(on_press=self.proceed_onboarding)
+
+        proceed_in_onboarding.bind(on_press=self.proceed_onboarding)  # Bind the button to the proceed_onboarding method
         self.window.add_widget(proceed_in_onboarding)
 
         return self.window
 
     def proceed_onboarding(self, instance):
+        self.vibrate_device()
         self.stop()
         SpeechApp().run()
 
-class SpeechApp(App): # Home page
+    def vibrate_device(self):
+        try:
+            vibrator.vibrate(0.1)  # Vibrate for 0.1 seconds
+        except NotImplementedError:
+            print("Vibration is not supported on this device")
+
+class SpeechApp(App):  # Home page
     def build(self):
         self.title = 'SpeakCast'
         Window.clearcolor = get_color_from_hex('#FFFFFF')
@@ -181,47 +127,19 @@ class SpeechApp(App): # Home page
         self.window.add_widget(self.main_button)
 
         return self.window
-    
 
-#         # STS BUTTON 
-#         speech_to_text_button = Button(
-#                                 text='Speech\nto\nText',
-#                                 color="#FFFFFF",
-#                                 halign = 'center',
-#                                 valign = 'middle',
-#                                 background_color = '#68A3FB',
-#                                 font_size = "30",
-#                                 bold = True
-#                                        )
-#         speech_to_text_button.bind(on_press=self.open_speech_to_text)
-#         self.window.add_widget(speech_to_text_button)
-
-#         self.window.add_widget(Label()) 
-
-#         # TTS BUTTON
-#         text_to_speech_button = Button(
-#                                 text='Text\nto\nSpeech',
-#                                 color="#FFFFFF",
-#                                 halign = 'center',
-#                                 valign = 'middle',
-#                                 background_color = '#68A3FB',
-#                                 font_size = "30",
-#                                 bold = True
-#                                        )
-#         text_to_speech_button.bind(on_press=self.open_text_to_speech)
-#         self.window.add_widget(text_to_speech_button)
-#         return self.window
-
-        main
     def open_speech_to_text(self, instance):
+        self.vibrate_device()
         self.stop()
         SpeechToTextApp().run()
 
     def open_text_to_speech(self, instance):
+        self.vibrate_device()
         self.stop()
         TextToSpeechApp().run()
 
     def swap_functionality(self, instance):
+        self.vibrate_device()
         if self.main_button.text == 'Speech\nto\nText':
             self.main_button.text = 'Text\nto\nSpeech'
             self.main_button.unbind(on_press=self.open_speech_to_text)
@@ -233,7 +151,13 @@ class SpeechApp(App): # Home page
             self.main_button.bind(on_press=self.open_speech_to_text)
             self.swap_button.text = 'Swap to Text to Speech'
 
-class SpeechToTextApp(App): # STT
+    def vibrate_device(self):
+        try:
+            vibrator.vibrate(0.1)  # Vibrate for 0.1 seconds
+        except NotImplementedError:
+            print("Vibration is not supported on this device")
+
+class SpeechToTextApp(App):  # STT
     def build(self):
         self.title = 'Speech to Text'
         layout = BoxLayout(orientation='vertical', padding=10)
@@ -302,9 +226,11 @@ class SpeechToTextApp(App): # STT
         return layout
 
     def copy_text(self, instance):
+        self.vibrate_device()
         Clipboard.copy(self.output_label.text)
 
     def start_recording(self, instance):
+        self.vibrate_device()
         self.recognizer = sr.Recognizer()
         self.microphone = sr.Microphone()
 
@@ -317,6 +243,7 @@ class SpeechToTextApp(App): # STT
         self.stop_button.disabled = False
 
     def stop_recording(self, instance):
+        self.vibrate_device()
         try:
             print("Recognizing...")
             text = self.recognizer.recognize_google(self.audio)
@@ -341,10 +268,17 @@ class SpeechToTextApp(App): # STT
         Clock.schedule_once(popup.dismiss, 3)
 
     def go_back_to_home(self, instance):
+        self.vibrate_device()
         self.stop()
         SpeechApp().run()
 
-class TextToSpeechApp(App): # TTS
+    def vibrate_device(self):
+        try:
+            vibrator.vibrate(0.1)  # Vibrate for 0.1 seconds
+        except NotImplementedError:
+            print("Vibration is not supported on this device")
+
+class TextToSpeechApp(App):  # TTS
     def build(self):
         self.title = 'Text to Speech'
         layout = BoxLayout(orientation='vertical', padding=10)
@@ -383,6 +317,7 @@ class TextToSpeechApp(App): # TTS
         return layout
 
     def text_to_speech(self, instance):
+        self.vibrate_device()
         text = self.text_input.text
         if text:
             self.engine.say(text)
@@ -399,6 +334,7 @@ class TextToSpeechApp(App): # TTS
         popup.open()
 
     def go_back_to_home(self, instance):
+        self.vibrate_device()
         self.stop()
         SpeechApp().run()
 
@@ -407,7 +343,11 @@ class TextToSpeechApp(App): # TTS
         self.engine.stop()
         super().on_stop()
 
-if __name__ == "__main__":
+    def vibrate_device(self):
+        try:
+            vibrator.vibrate(0.1)  # Vibrate for 0.1 seconds
+        except NotImplementedError:
+            print("Vibration is not supported on this device")
 
+if __name__ == "__main__":
     OnboardingPage().run()
-        # main
