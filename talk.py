@@ -80,7 +80,7 @@ class OnboardingPage(App): #ONBOARDING
 
 
 class SpeechApp(App): # Home page
-        main
+        # main
     def build(self):
         self.title = 'SpeakCast'
         Window.clearcolor = get_color_from_hex('#2274F0')
@@ -410,4 +410,4 @@ class TextToSpeechApp(App): # TTS
 if __name__ == "__main__":
 
     OnboardingPage().run()
-        main
+        # main
